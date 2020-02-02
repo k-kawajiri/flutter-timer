@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_timer/timerBloc.dart';
 
 void main() => runApp(MyApp());
 
@@ -59,6 +60,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Duration timeUp = Duration(seconds: 10);
+    TimerBloc2 timerBloc = new TimerBloc2(timeUp);
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -98,11 +101,26 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.display1,
             ),
+            StreamBuilder(
+                stream: timerBloc.timer,
+                builder: (BuildContext context,
+                    AsyncSnapshot<CountDownTimerInfo> snapShot) {
+                  return Text(snapShot.hasData
+                      ? snapShot.data.diffByTimeUp.toString()
+                      : "-");
+                }),
+            IconButton(
+              onPressed: () => timerBloc.timerAction.add(TimerAction.STOP),
+              icon: Icon(Icons.access_time),
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {
+          _incrementCounter();
+          timerBloc.timerAction.add(TimerAction.START);
+        },
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
