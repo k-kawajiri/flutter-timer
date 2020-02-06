@@ -87,7 +87,7 @@ class TimerBloc2 extends CountDownTimerInfo {
 
   void _start() {
     _timerState = TimerState.START;
-    _timer = Timer.periodic(_countUpDuration, _tick);
+    _timer ??= Timer.periodic(_countUpDuration, _tick);
   }
 
   void _reset() {
@@ -99,6 +99,7 @@ class TimerBloc2 extends CountDownTimerInfo {
   void _stop() {
     _timerState = TimerState.STOP;
     _timer?.cancel();
+    _timer = null;
     _controller.sink.add(this);
   }
 
