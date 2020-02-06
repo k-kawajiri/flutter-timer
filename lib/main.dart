@@ -56,7 +56,7 @@ class MyHomePage extends StatelessWidget {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
+        child: Row(
           // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
           // children horizontally, and tries to be as tall as its parent.
@@ -73,8 +73,9 @@ class MyHomePage extends StatelessWidget {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+            IconButton(
+              onPressed: () => timerBloc.timerAction.add(TimerAction.STOP),
+              icon: Icon(Icons.access_time),
             ),
             StreamBuilder(
                 stream: timerBloc.timer,
@@ -82,23 +83,23 @@ class MyHomePage extends StatelessWidget {
                     AsyncSnapshot<CountDownTimerInfo> snapShot) {
                   return Text(snapShot.hasData
                       ? snapShot.data.diffByTimeUp.toString()
-                      : "-");
+                      : "--:--:--");
                 }),
             IconButton(
-              onPressed: () => timerBloc.timerAction.add(TimerAction.STOP),
-              icon: Icon(Icons.access_time),
+              onPressed: () => timerBloc.timerAction.add(TimerAction.RESET),
+              icon: Icon(Icons.restore),
             ),
           ],
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           timerBloc.timerAction.add(TimerAction.START);
         },
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+        tooltip: 'Start timer',
+        child: Icon(Icons.play_circle_outline),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
-
