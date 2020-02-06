@@ -58,10 +58,11 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Duration timeUp = Duration(seconds: 10);
+  TimerBloc2 timerBloc = new TimerBloc2(Duration(seconds: 10));
+
   @override
   Widget build(BuildContext context) {
-    Duration timeUp = Duration(seconds: 10);
-    TimerBloc2 timerBloc = new TimerBloc2(timeUp);
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
