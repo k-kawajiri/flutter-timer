@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:rxdart/rxdart.dart';
 import 'package:flutter/cupertino.dart';
 
 class TimerBloc {
@@ -27,7 +27,7 @@ class TimerBloc {
 }
 
 class TimerBloc2 extends CountDownTimerInfo {
-  StreamController<CountDownTimerInfo> _controller;
+  StreamController<CountDownTimerInfo> _controller = BehaviorSubject();
 
   Stream<CountDownTimerInfo> get timer => _controller.stream;
   final _actionController = StreamController<TimerAction>();
@@ -48,18 +48,12 @@ class TimerBloc2 extends CountDownTimerInfo {
   static final Duration _countUpDuration = new Duration(milliseconds: 100);
 
   TimerBloc2(Duration timeLimit) {
-    _controller = StreamController<CountDownTimerInfo>(
-      onListen: listen,
-    );
     _counter = 0;
     _timeUp = timeLimit;
     _diffByTimeUp = _timeUp;
     _actionController.stream.listen((data) {
       actionHandle(data);
     });
-//    timer.listen((data){
-//      debugPrint(data.diffByTimeUp.toString());
-//    });
   }
 
   void listen() {
