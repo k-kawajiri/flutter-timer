@@ -28,6 +28,7 @@ class TimerBloc {
 
 class TimerBloc2 extends CountDownTimerInfo {
   StreamController<CountDownTimerInfo> _controller;
+
   Stream<CountDownTimerInfo> get timer => _controller.stream;
   final _actionController = StreamController<TimerAction>();
 
@@ -47,8 +48,8 @@ class TimerBloc2 extends CountDownTimerInfo {
   static final Duration _countUpDuration = new Duration(milliseconds: 100);
 
   TimerBloc2(Duration timeLimit) {
-    _controller  = StreamController<CountDownTimerInfo>(
-      onListen:listen,
+    _controller = StreamController<CountDownTimerInfo>(
+      onListen: listen,
     );
     _counter = 0;
     _timeUp = timeLimit;
@@ -61,7 +62,7 @@ class TimerBloc2 extends CountDownTimerInfo {
 //    });
   }
 
-  void listen(){
+  void listen() {
     debugPrint("listent");
   }
 
@@ -91,9 +92,8 @@ class TimerBloc2 extends CountDownTimerInfo {
 
   void _reset() {
     _counter = 0;
-    _timerState = TimerState.STOP;
-    _timer?.cancel();
-    _controller.sink.add(this);
+    _calcDiffByTimeUp();
+    _stop();
   }
 
   void _stop() {
@@ -102,18 +102,20 @@ class TimerBloc2 extends CountDownTimerInfo {
     _controller.sink.add(this);
   }
 
-  int _convertCounterToMilliseconds() =>
-      _counter * _countUpDuration.inMilliseconds;
-
   void _tick(Timer timer) {
     _counter++;
-    _diffByTimeUp =
-        _timeUp - Duration(milliseconds: _convertCounterToMilliseconds());
+    _calcDiffByTimeUp();
     if (_timeUp.inMilliseconds <= _convertCounterToMilliseconds()) {
       _timerState = TimerState.TIME_UP;
     }
     _controller.sink.add(this);
   }
+
+  void _calcDiffByTimeUp() => _diffByTimeUp =
+      _timeUp - Duration(milliseconds: _convertCounterToMilliseconds());
+
+  int _convertCounterToMilliseconds() =>
+      _counter * _countUpDuration.inMilliseconds;
 }
 
 abstract class CountDownTimerInfo {
