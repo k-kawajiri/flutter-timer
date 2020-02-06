@@ -43,11 +43,12 @@ class TimerBloc extends CountDownTimerInfo {
 
   void actionHandle(TimerAction action) {
     switch (action) {
-      case TimerAction.START:
-        _start();
-        break;
-      case TimerAction.STOP:
-        _stop();
+      case TimerAction.TOGGLE_START_STOP:
+        if (timerState == TimerState.STOP) {
+          _start();
+        } else {
+          _stop();
+        }
         break;
       case TimerAction.RESET:
         _reset();
@@ -102,4 +103,4 @@ abstract class CountDownTimerInfo {
 
 enum TimerState { START, STOP, TIME_UP }
 
-enum TimerAction { START, STOP, RESET }
+enum TimerAction { TOGGLE_START_STOP, RESET }

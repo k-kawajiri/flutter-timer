@@ -37,7 +37,7 @@ class MyHomePage extends StatelessWidget {
   final String title;
 
   final Duration timeUp = Duration(seconds: 10);
-  final TimerBloc2 timerBloc = new TimerBloc2(Duration(seconds: 10));
+  final TimerBloc timerBloc = new TimerBloc(Duration(seconds: 10));
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +74,7 @@ class MyHomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             IconButton(
-              onPressed: () => timerBloc.timerAction.add(TimerAction.STOP),
+              onPressed: () => {},
               icon: Icon(Icons.access_time),
             ),
             StreamBuilder(
@@ -95,7 +95,7 @@ class MyHomePage extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            timerBloc.timerAction.add(TimerAction.START);
+            timerBloc.timerAction.add(TimerAction.TOGGLE_START_STOP);
           },
           child: StreamBuilder(
               stream: timerBloc.timer,
