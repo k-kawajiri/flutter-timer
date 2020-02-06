@@ -94,12 +94,27 @@ class MyHomePage extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          timerBloc.timerAction.add(TimerAction.START);
-        },
-        tooltip: 'Start timer',
-        child: Icon(Icons.play_circle_outline),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+          onPressed: () {
+            timerBloc.timerAction.add(TimerAction.START);
+          },
+          child: StreamBuilder(
+              stream: timerBloc.timer,
+              builder: (BuildContext context,
+                  AsyncSnapshot<CountDownTimerInfo> snapShot) {
+                Icon icon;
+                switch (snapShot?.data?.timerState) {
+                  case TimerState.START:
+                    icon = Icon(Icons.pause_circle_outline);
+                    break;
+                  case TimerState.TIME_UP:
+                    icon = Icon(Icons.stop);
+                    break;
+                  case TimerState.STOP:
+                  default:
+                    icon = Icon(Icons.play_circle_outline);
+                }
+                return icon;
+              })), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
