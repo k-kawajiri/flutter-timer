@@ -86,7 +86,7 @@ class MyHomePage extends StatelessWidget {
                 builder: (BuildContext context,
                     AsyncSnapshot<CountDownTimerInfo> snapShot) {
                   return Text(snapShot.hasData
-                      ? snapShot.data.diffByTimeUp.toString()
+                      ? snapShot.data.diffByTimeUp
                       : Duration.zero.toString());
                 }),
             IconButton(

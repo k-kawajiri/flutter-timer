@@ -20,7 +20,7 @@ class TimerBloc extends CountDownTimerInfo {
   Duration get timeUp => _timeUp;
   Duration _diffByTimeUp;
 
-  Duration get diffByTimeUp => _diffByTimeUp;
+  String get diffByTimeUp => _diffByTimeUp.toString().replaceAll(RegExp("\\..*"), "");
   Timer _timer;
   int _counter = 0;
   static final Duration _countUpDuration = new Duration(milliseconds: 100);
@@ -105,7 +105,7 @@ abstract class CountDownTimerInfo {
   TimerState get timerState;
 
   /// タイムアップまでの時間
-  Duration get diffByTimeUp;
+  String get diffByTimeUp;
 
   /// タイムアップ時間
   Duration get timeUp;
