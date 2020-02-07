@@ -4,25 +4,28 @@ import 'package:rxdart/rxdart.dart';
 
 class TimerBloc extends CountDownTimerInfo {
   final StreamController<CountDownTimerInfo> _controller = BehaviorSubject();
+
   Stream<CountDownTimerInfo> get timer => _controller.stream;
   final StreamController<TimerAction> _actionController = BehaviorSubject();
+
   Sink<TimerAction> get timerAction => _actionController.sink;
   final StreamController<Duration> _settingController = BehaviorSubject();
+
   Sink get setting => _settingController.sink;
-  TimerState _timerState = TimerState.STOP;
+  TimerState _timerState = TimerState.INIT;
+
   TimerState get timerState => _timerState;
-  Duration _timeUp;
+  Duration _timeUp = Duration.zero;
+
   Duration get timeUp => _timeUp;
   Duration _diffByTimeUp;
 
   Duration get diffByTimeUp => _diffByTimeUp;
   Timer _timer;
-  int _counter;
+  int _counter = 0;
   static final Duration _countUpDuration = new Duration(milliseconds: 100);
 
-  TimerBloc(Duration timeLimit) {
-    _counter = 0;
-    _timeUp = timeLimit;
+  TimerBloc() {
     _diffByTimeUp = _timeUp;
     _actionController.stream.listen(actionHandle);
     _settingController.stream.listen(setTimeLimit);
@@ -35,6 +38,10 @@ class TimerBloc extends CountDownTimerInfo {
   }
 
   void actionHandle(TimerAction action) {
+    if (timerState == TimerState.INIT) {
+      return;
+    }
+
     switch (action) {
       case TimerAction.TOGGLE_START_STOP:
         if (timerState == TimerState.STOP) {
@@ -49,9 +56,11 @@ class TimerBloc extends CountDownTimerInfo {
     }
   }
 
-  void setTimeLimit(Duration timeLimit){
-    _timeUp = timeLimit;
-    updateRemainingTime();
+  void setTimeLimit(Duration timeLimit) {
+    if (timeLimit != null) {
+      _timeUp = timeLimit;
+      _reset();
+    }
   }
 
   void _start() {
@@ -79,7 +88,7 @@ class TimerBloc extends CountDownTimerInfo {
     updateRemainingTime();
   }
 
-  void updateRemainingTime(){
+  void updateRemainingTime() {
     _calcDiffByTimeUp();
     _controller.sink.add(this);
   }
@@ -102,6 +111,6 @@ abstract class CountDownTimerInfo {
   Duration get timeUp;
 }
 
-enum TimerState { START, STOP, TIME_UP }
+enum TimerState { INIT, START, STOP, TIME_UP }
 
 enum TimerAction { TOGGLE_START_STOP, RESET }

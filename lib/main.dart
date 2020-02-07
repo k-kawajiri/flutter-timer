@@ -37,8 +37,7 @@ class MyHomePage extends StatelessWidget {
 
   final String title;
 
-  final Duration timeUp = Duration(seconds: 10);
-  final TimerBloc timerBloc = new TimerBloc(Duration(seconds: 10));
+  final TimerBloc timerBloc = new TimerBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -135,8 +134,7 @@ class TimerWidget extends StatefulWidget {
 }
 
 class TimerWidgetState extends State<TimerWidget> {
-  final Duration timeUp = Duration(seconds: 10);
-  final TimerBloc timerBloc = new TimerBloc(Duration(seconds: 10));
+  final TimerBloc timerBloc = new TimerBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -177,12 +175,11 @@ class TimerWidgetState extends State<TimerWidget> {
               icon: Icon(Icons.access_time),
             ),
             StreamBuilder(
+              initialData: timerBloc,
                 stream: timerBloc.timer,
                 builder: (BuildContext context,
                     AsyncSnapshot<CountDownTimerInfo> snapShot) {
-                  return Text(snapShot.hasData
-                      ? snapShot.data.diffByTimeUp.toString()
-                      : "--:--:--");
+                  return Text(snapShot.data.diffByTimeUp.toString());
                 }),
             IconButton(
               onPressed: () => timerBloc.timerAction.add(TimerAction.RESET),
