@@ -71,11 +71,11 @@ class TimerBloc extends CountDownTimerInfo {
   void _reset() {
     _counter = 0;
     _stop();
-    updateRemainingTime();
   }
 
   void _stop() {
     _timerState = TimerState.STOP;
+    updateRemainingTime();
     _timer?.cancel();
     _timer = null;
   }
