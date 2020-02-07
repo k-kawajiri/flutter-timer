@@ -1,20 +1,17 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:flutter/cupertino.dart';
 
 class TimerBloc extends CountDownTimerInfo {
-  StreamController<CountDownTimerInfo> _controller = BehaviorSubject();
-
+  final StreamController<CountDownTimerInfo> _controller = BehaviorSubject();
   Stream<CountDownTimerInfo> get timer => _controller.stream;
-  final _actionController = StreamController<TimerAction>();
-
+  final StreamController<TimerAction> _actionController = BehaviorSubject();
   Sink<TimerAction> get timerAction => _actionController.sink;
-
+  final StreamController<Duration> _settingController = BehaviorSubject();
+  Sink get setting => _settingController.sink;
   TimerState _timerState = TimerState.STOP;
-
   TimerState get timerState => _timerState;
   Duration _timeUp;
-
   Duration get timeUp => _timeUp;
   Duration _diffByTimeUp;
 
@@ -27,18 +24,14 @@ class TimerBloc extends CountDownTimerInfo {
     _counter = 0;
     _timeUp = timeLimit;
     _diffByTimeUp = _timeUp;
-    _actionController.stream.listen((data) {
-      actionHandle(data);
-    });
-  }
-
-  void listen() {
-    debugPrint("listent");
+    _actionController.stream.listen(actionHandle);
+    _settingController.stream.listen(setTimeLimit);
   }
 
   void dispose() async {
     _controller.close();
     _actionController.close();
+    _settingController.close();
   }
 
   void actionHandle(TimerAction action) {
@@ -56,6 +49,11 @@ class TimerBloc extends CountDownTimerInfo {
     }
   }
 
+  void setTimeLimit(Duration timeLimit){
+    _timeUp = timeLimit;
+    updateRemainingTime();
+  }
+
   void _start() {
     _timerState = TimerState.START;
     _timer ??= Timer.periodic(_countUpDuration, _tick);
@@ -63,23 +61,26 @@ class TimerBloc extends CountDownTimerInfo {
 
   void _reset() {
     _counter = 0;
-    _calcDiffByTimeUp();
     _stop();
+    updateRemainingTime();
   }
 
   void _stop() {
     _timerState = TimerState.STOP;
     _timer?.cancel();
     _timer = null;
-    _controller.sink.add(this);
   }
 
   void _tick(Timer timer) {
     _counter++;
-    _calcDiffByTimeUp();
     if (_timeUp.inMilliseconds <= _convertCounterToMilliseconds()) {
       _timerState = TimerState.TIME_UP;
     }
+    updateRemainingTime();
+  }
+
+  void updateRemainingTime(){
+    _calcDiffByTimeUp();
     _controller.sink.add(this);
   }
 
