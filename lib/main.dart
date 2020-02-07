@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'カウントダウンタイマー'),
     );
   }
 }
@@ -74,6 +74,7 @@ class MyHomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             IconButton(
+              tooltip: "Set Timer",
               onPressed: () {
                 Future date;
                 date = showTimerPicker(context: context);
@@ -82,14 +83,19 @@ class MyHomePage extends StatelessWidget {
               icon: Icon(Icons.access_time),
             ),
             StreamBuilder(
+              initialData: timerBloc,
                 stream: timerBloc.timer,
                 builder: (BuildContext context,
                     AsyncSnapshot<CountDownTimerInfo> snapShot) {
-                  return Text(snapShot.hasData
-                      ? snapShot.data.diffByTimeUp
-                      : Duration.zero.toString());
+                  return Text(
+                    snapShot.data.diffByTimeUp,
+                    style: DefaultTextStyle.of(context)
+                        .style
+                        .apply(fontSizeFactor: 2.0),
+                  );
                 }),
             IconButton(
+              tooltip: "Reset",
               onPressed: () => timerBloc.timerAction.add(TimerAction.RESET),
               icon: Icon(Icons.restore),
             ),
@@ -109,14 +115,14 @@ class MyHomePage extends StatelessWidget {
                 Icon icon;
                 switch (snapShot?.data?.timerState) {
                   case TimerState.START:
-                    icon = Icon(Icons.pause_circle_outline);
+                    icon = Icon(Icons.pause);
                     break;
                   case TimerState.TIME_UP:
                     icon = Icon(Icons.stop);
                     break;
                   case TimerState.STOP:
                   default:
-                    icon = Icon(Icons.play_circle_outline);
+                    icon = Icon(Icons.play_arrow);
                 }
                 return icon;
               })), // This trailing comma makes auto-formatting nicer for build methods.
@@ -175,7 +181,7 @@ class TimerWidgetState extends State<TimerWidget> {
               icon: Icon(Icons.access_time),
             ),
             StreamBuilder(
-              initialData: timerBloc,
+                initialData: timerBloc,
                 stream: timerBloc.timer,
                 builder: (BuildContext context,
                     AsyncSnapshot<CountDownTimerInfo> snapShot) {

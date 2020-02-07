@@ -46,7 +46,7 @@ class _TimerPickerState extends State<_TimerPicker> {
       ],
     );
     final AlertDialog dialog = AlertDialog(
-      title: Text("設定"),
+      title: Text("Set Timer"),
       content: TextField(
         controller: dateTextController,
         decoration: InputDecoration(
