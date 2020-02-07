@@ -8,6 +8,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -37,7 +38,7 @@ class MyHomePage extends StatelessWidget {
 
   final String title;
 
-  final TimerBloc timerBloc = new TimerBloc();
+  final CountDownTimerBloc timerBloc = new CountDownTimerBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +89,7 @@ class MyHomePage extends StatelessWidget {
                 builder: (BuildContext context,
                     AsyncSnapshot<CountDownTimerInfo> snapShot) {
                   return Text(
-                    snapShot.data.diffByTimeUp,
+                    snapShot.data.remainingTime,
                     style: DefaultTextStyle.of(context)
                         .style
                         .apply(fontSizeFactor: 2.0),
@@ -140,7 +141,7 @@ class TimerWidget extends StatefulWidget {
 }
 
 class TimerWidgetState extends State<TimerWidget> {
-  final TimerBloc timerBloc = new TimerBloc();
+  final CountDownTimerBloc timerBloc = new CountDownTimerBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -185,7 +186,7 @@ class TimerWidgetState extends State<TimerWidget> {
                 stream: timerBloc.timer,
                 builder: (BuildContext context,
                     AsyncSnapshot<CountDownTimerInfo> snapShot) {
-                  return Text(snapShot.data.diffByTimeUp.toString());
+                  return Text(snapShot.data.remainingTime.toString());
                 }),
             IconButton(
               onPressed: () => timerBloc.timerAction.add(TimerAction.RESET),

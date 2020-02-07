@@ -2,43 +2,55 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
-class TimerBloc extends CountDownTimerInfo {
+class CountDownTimerBloc extends CountDownTimerInfo {
+  /// @formatter:off
+  /// カウントダウンタイマーの更新通知用
   final StreamController<CountDownTimerInfo> _controller = BehaviorSubject();
-
   Stream<CountDownTimerInfo> get timer => _controller.stream;
-  final StreamController<TimerAction> _actionController = BehaviorSubject();
 
-  Sink<TimerAction> get timerAction => _actionController.sink;
+  /// カウントダウンタイマー操作用
+  final StreamController<TimerAction> _timerActionController = BehaviorSubject();
+  Sink<TimerAction> get timerAction => _timerActionController.sink;
+
+  /// 計測時間設定用
   final StreamController<Duration> _settingController = BehaviorSubject();
-
   Sink get setting => _settingController.sink;
-  TimerState _timerState = TimerState.INIT;
 
+  /// タイマーの状態 See[TimerState]
+  TimerState _timerState = TimerState.BEFORE_SETTING;
   TimerState get timerState => _timerState;
-  Duration _timeUp = Duration.zero;
 
-  Duration get timeUp => _timeUp;
-  Duration _diffByTimeUp;
+  /// 計測時間
+  Duration _duration = Duration.zero;
+  Duration get duration => _duration;
 
-  String get diffByTimeUp => _diffByTimeUp.toString().replaceAll(RegExp("\\..*"), "");
+  /// 残り時間
+  Duration _remainingTime;
+  String get remainingTime =>
+      _remainingTime.toString().replaceAll(RegExp("\\..*"), "");
+
   Timer _timer;
+  /// カウントダウンタイマー更新回数
   int _counter = 0;
+  /// カウントダウンタイマー更新間隔
   static final Duration _countUpDuration = new Duration(milliseconds: 100);
+  /// @formatter:on
 
-  TimerBloc() {
-    _diffByTimeUp = _timeUp;
-    _actionController.stream.listen(actionHandle);
-    _settingController.stream.listen(setTimeLimit);
+  CountDownTimerBloc() {
+    _remainingTime = _duration;
+    _timerActionController.stream.listen(actionHandle);
+    _settingController.stream.listen(setDuration);
   }
 
   void dispose() async {
-    _controller.close();
-    _actionController.close();
-    _settingController.close();
+    _timer?.cancel();
+    await _controller.close();
+    await _timerActionController.close();
+    await _settingController.close();
   }
 
   void actionHandle(TimerAction action) {
-    if (timerState == TimerState.INIT) {
+    if (timerState == TimerState.BEFORE_SETTING) {
       return;
     }
 
@@ -56,9 +68,9 @@ class TimerBloc extends CountDownTimerInfo {
     }
   }
 
-  void setTimeLimit(Duration timeLimit) {
-    if (timeLimit != null) {
-      _timeUp = timeLimit;
+  void setDuration(Duration duration) {
+    if (duration != null) {
+      _duration = duration;
       _reset();
     }
   }
@@ -82,7 +94,7 @@ class TimerBloc extends CountDownTimerInfo {
 
   void _tick(Timer timer) {
     _counter++;
-    if (_timeUp.inMilliseconds <= _convertCounterToMilliseconds()) {
+    if (_duration.inMilliseconds <= _convertCounterToMilliseconds()) {
       _timerState = TimerState.TIME_UP;
     }
     updateRemainingTime();
@@ -93,8 +105,9 @@ class TimerBloc extends CountDownTimerInfo {
     _controller.sink.add(this);
   }
 
-  void _calcDiffByTimeUp() => _diffByTimeUp =
-      _timeUp - Duration(milliseconds: _convertCounterToMilliseconds());
+  void _calcDiffByTimeUp() =>
+      _remainingTime =
+          _duration - Duration(milliseconds: _convertCounterToMilliseconds());
 
   int _convertCounterToMilliseconds() =>
       _counter * _countUpDuration.inMilliseconds;
@@ -105,12 +118,12 @@ abstract class CountDownTimerInfo {
   TimerState get timerState;
 
   /// タイムアップまでの時間
-  String get diffByTimeUp;
+  String get remainingTime;
 
   /// タイムアップ時間
-  Duration get timeUp;
+  Duration get duration;
 }
 
-enum TimerState { INIT, START, STOP, TIME_UP }
+enum TimerState { BEFORE_SETTING, START, STOP, TIME_UP }
 
 enum TimerAction { TOGGLE_START_STOP, RESET }
