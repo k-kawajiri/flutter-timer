@@ -89,7 +89,7 @@ class MyHomePage extends StatelessWidget {
                 builder: (BuildContext context,
                     AsyncSnapshot<CountDownTimerInfo> snapShot) {
                   return Text(
-                    snapShot.data.remainingTime,
+                    snapShot.data.remainingTime.toString(), //.replaceAll(RegExp("\\..*"), ""),
                     style: DefaultTextStyle.of(context)
                         .style
                         .apply(fontSizeFactor: 2.0),

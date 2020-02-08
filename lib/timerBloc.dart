@@ -26,8 +26,7 @@ class CountDownTimerBloc extends CountDownTimerInfo {
 
   /// 残り時間
   Duration _remainingTime;
-  String get remainingTime =>
-      _remainingTime.toString().replaceAll(RegExp("\\..*"), "");
+  Duration get remainingTime =>_remainingTime;
 
   Timer _timer;
   /// カウントダウンタイマー更新回数
@@ -118,7 +117,7 @@ abstract class CountDownTimerInfo {
   TimerState get timerState;
 
   /// タイムアップまでの時間
-  String get remainingTime;
+  Duration get remainingTime;
 
   /// タイムアップ時間
   Duration get duration;
