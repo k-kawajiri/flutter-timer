@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_timer/time_formatter.dart';
 import 'package:flutter_timer/timerBloc.dart';
 import 'package:flutter_timer/timer_picker.dart';
 
@@ -8,7 +9,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -84,12 +84,12 @@ class MyHomePage extends StatelessWidget {
               icon: Icon(Icons.access_time),
             ),
             StreamBuilder(
-              initialData: timerBloc,
+                initialData: timerBloc,
                 stream: timerBloc.timer,
                 builder: (BuildContext context,
                     AsyncSnapshot<CountDownTimerInfo> snapShot) {
                   return Text(
-                    snapShot.data.remainingTime.toString(), //.replaceAll(RegExp("\\..*"), ""),
+                    TimeFormatter.formatToHMSColon(snapShot.data.remainingTime),
                     style: DefaultTextStyle.of(context)
                         .style
                         .apply(fontSizeFactor: 2.0),
