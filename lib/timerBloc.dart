@@ -41,11 +41,11 @@ class CountDownTimerBloc extends CountDownTimerInfo {
     _settingController.stream.listen(setDuration);
   }
 
-  void dispose() async {
+  void dispose() {
     _timer?.cancel();
-    await _controller.close();
-    await _timerActionController.close();
-    await _settingController.close();
+    _controller.close();
+    _timerActionController.close();
+    _settingController.close();
   }
 
   void actionHandle(TimerAction action) {
