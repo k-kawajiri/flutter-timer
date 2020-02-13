@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_timer/time_formatter.dart';
-import 'package:flutter_timer/timerBloc.dart';
+import 'package:flutter_timer/timer_bloc.dart';
 import 'package:flutter_timer/timer_picker.dart';
 
 void main() => runApp(MyApp());
