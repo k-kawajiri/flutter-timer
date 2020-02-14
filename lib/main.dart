@@ -13,13 +13,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'カウントダウンタイマー'),
+      home: CountDownTimerWidget(title: 'カウントダウンタイマー'),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class CountDownTimerWidget extends StatelessWidget {
+  CountDownTimerWidget({Key key, this.title}) : super(key: key);
   final String title;
   final CountDownTimerBloc timerBloc = new CountDownTimerBloc();
 
