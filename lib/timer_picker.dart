@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Future<Duration> showTimerPicker({
+Future<Duration> showTimerDialog({
   @required BuildContext context,
   TransitionBuilder builder,
   bool useRootNavigator = true,
 }) async {
-  final Widget dialog = _TimerPicker();
-  return await showDialog(
+  final Widget dialog = _TimerDialog();
+  return showDialog(
     context: context,
     useRootNavigator: useRootNavigator,
     builder: (BuildContext context) {
@@ -18,12 +18,12 @@ Future<Duration> showTimerPicker({
   );
 }
 
-class _TimerPicker extends StatefulWidget {
+class _TimerDialog extends StatefulWidget {
   @override
-  State createState() => _TimerPickerState();
+  State createState() => _TimerDialogState();
 }
 
-class _TimerPickerState extends State<_TimerPicker> {
+class _TimerDialogState extends State<_TimerDialog> {
   final dateTextController = TextEditingController();
 
   @override
