@@ -56,10 +56,7 @@ class _TimerDialogState extends State<_TimerDialog> {
       actions: actions,
     );
 
-    return Theme(
-      data: Theme.of(context),
-      child: dialog,
-    );
+    return dialog;
   }
 
   @override
