@@ -29,8 +29,7 @@ class _TimerDialogState extends State<_TimerDialog> {
   @override
   Widget build(BuildContext context) {
     MaterialLocalizations localizations = MaterialLocalizations.of(context);
-    final Widget actions = ButtonBar(
-      children: <Widget>[
+    final List<Widget> actions = [
         FlatButton(
           child: Text(localizations.cancelButtonLabel),
           onPressed: () => Navigator.pop(context),
@@ -43,8 +42,7 @@ class _TimerDialogState extends State<_TimerDialog> {
             Navigator.pop<Duration>(context, Duration(seconds: seconds));
           },
         ),
-      ],
-    );
+      ];
     final AlertDialog dialog = AlertDialog(
       title: Text("Set Timer"),
       content: TextField(
@@ -55,7 +53,7 @@ class _TimerDialogState extends State<_TimerDialog> {
         autofocus: true,
         keyboardType: TextInputType.number,
       ),
-      actions: [actions],
+      actions: actions,
     );
 
     return Theme(
