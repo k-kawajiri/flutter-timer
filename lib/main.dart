@@ -66,6 +66,7 @@ class CountDownTimerWidget extends StatelessWidget {
           onPressed: () {
             timerBloc.timerAction.add(TimerAction.TOGGLE_START_STOP);
           },
+          // TODO timer streamだとタイマーが更新される度にアイコンの更新が起きてしまう
           child: StreamBuilder(
               initialData: null,
               stream: timerBloc.timer,
