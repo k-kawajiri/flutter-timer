@@ -36,8 +36,7 @@ class CountDownTimerWidget extends StatelessWidget {
             IconButton(
               tooltip: "Set Timer",
               onPressed: () {
-                Future date;
-                date = showTimerDialog(context: context);
+                Future date = showTimerDialog(context: context);
                 date.then((value) => timerBloc.setting.add(value));
               },
               icon: Icon(Icons.access_time),
