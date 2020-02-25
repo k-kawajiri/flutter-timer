@@ -9,7 +9,7 @@ Future<Duration> showTimerDialog({
   bool useRootNavigator = true,
 }) {
   final Widget dialog = _TimerDialog();
-  return showDialog(
+  return showCupertinoModalPopup(
     context: context,
     useRootNavigator: useRootNavigator,
     builder: (BuildContext context) {
@@ -24,44 +24,34 @@ class _TimerDialog extends StatefulWidget {
 }
 
 class _TimerDialogState extends State<_TimerDialog> {
-  final dateTextController = TextEditingController();
+  Duration timerDuration = Duration.zero;
 
   @override
   Widget build(BuildContext context) {
     MaterialLocalizations localizations = MaterialLocalizations.of(context);
     final List<Widget> actions = [
-      FlatButton(
-        child: Text(localizations.cancelButtonLabel),
-        onPressed: () => Navigator.pop(context),
-      ),
-      FlatButton(
+      CupertinoActionSheetAction(
         child: Text(localizations.okButtonLabel),
         onPressed: () {
-          // TODO バリデーション
-          int seconds = int.tryParse(dateTextController.text);
-          Navigator.pop<Duration>(context, Duration(seconds: seconds));
+          Navigator.pop<Duration>(context, timerDuration);
         },
       ),
     ];
-    final AlertDialog dialog = AlertDialog(
+
+    final actionSheet = CupertinoActionSheet(
       title: Text("Set Timer"),
-      content: TextField(
-        controller: dateTextController,
-        decoration: InputDecoration(
-          hintText: "sec",
-        ),
-        autofocus: true,
-        keyboardType: TextInputType.number,
+      message: CupertinoTimerPicker(
+        initialTimerDuration: timerDuration,
+        onTimerDurationChanged: (newDuration) => timerDuration = newDuration,
       ),
       actions: actions,
+      cancelButton: CupertinoActionSheetAction(
+        child: Text(localizations.cancelButtonLabel),
+        onPressed: () => Navigator.pop(context),
+      ),
     );
 
-    return dialog;
+    return actionSheet;
   }
 
-  @override
-  void dispose() {
-    dateTextController.dispose();
-    super.dispose();
-  }
 }
