@@ -41,7 +41,6 @@ class _TimerDialogState extends State<_TimerDialog> {
     final actionSheet = CupertinoActionSheet(
       title: Text("Set Timer"),
       message: CupertinoTimerPicker(
-        initialTimerDuration: timerDuration,
         onTimerDurationChanged: (newDuration) => timerDuration = newDuration,
       ),
       actions: actions,
